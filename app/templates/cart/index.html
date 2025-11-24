@@ -36,4 +36,129 @@
     <p class="text-sm text-light-text-secondary dark:text-dark-text-secondary">Tu carrito está vacío.</p>
   {% endif %}
 
+  {% if order and order.items %}
+    <div class="mt-4">
+      <button id="payBtn" class="px-4 py-2 bg-blue-600 text-white rounded">Pagar con Fintoc</button>
+    </div>
+  {% endif %}
+
+  <!-- Mock widget modal -->
+  <div class="modal fade" id="mockWidgetModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Simulación Pago (MOCK)</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Se simula el flujo del widget de Fintoc en modo MOCK.</p>
+          <p>Monto: <strong>{{ order_total_clp or 0 }} CLP</strong></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="mockCancel" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" id="mockConfirm" class="btn btn-primary">Confirmar pago (simulado)</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% if order and order.items %}
+    <script src="https://js.fintoc.com/v1/"></script>
+    <script>
+      const payBtn = document.getElementById('payBtn');
+      const publicKey = "{{ fintoc_public_key or '' }}";
+      const mockPaymentIntent = {{ 'true' if mock_payment_intent else 'false' }};
+      const amountClp = {{ order_total_clp or 0 }};
+
+      async function createPaymentIntent(amount) {
+        try {
+          const res = await fetch('/create_payment_intent', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ amount: amount })
+          });
+          const data = await res.json();
+          if (!res.ok) {
+            alert('Error creando payment intent: ' + (data.error || JSON.stringify(data)));
+            return null;
+          }
+          return data.widget_token;
+        } catch (err) {
+          console.error(err);
+          alert('Error de red creando payment intent');
+          return null;
+        }
+      }
+
+      payBtn && payBtn.addEventListener('click', async () => {
+        if (!publicKey) {
+          alert('FINTOC_PUBLIC_KEY no configurada en el servidor. Revisar .env');
+          return;
+        }
+
+        const widgetToken = await createPaymentIntent(amountClp);
+        if (!widgetToken) return;
+
+        if (mockPaymentIntent) {
+          // show bootstrap modal if available
+          if (typeof bootstrap !== 'undefined') {
+            const mockModalEl = document.getElementById('mockWidgetModal');
+            const mockModal = new bootstrap.Modal(mockModalEl);
+            mockModal.show();
+
+            const confirmBtn = document.getElementById('mockConfirm');
+            const cancelBtn = document.getElementById('mockCancel');
+
+            const onConfirm = async () => {
+              mockModal.hide();
+              try{
+                await fetch('/orders', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({product_id: '{{ order.items[0].product.id }}', amount: amountClp, status: 'succeeded', payment_intent_id: 'pi_mock'})});
+              }catch(e){ console.warn('No se pudo persistir orden mock:', e); }
+              alert('Pago simulado exitoso.');
+              confirmBtn.removeEventListener('click', onConfirm);
+              cancelBtn.removeEventListener('click', onCancel);
+            };
+
+            const onCancel = () => {
+              mockModal.hide();
+              alert('Pago simulado cancelado.');
+              confirmBtn.removeEventListener('click', onConfirm);
+              cancelBtn.removeEventListener('click', onCancel);
+            };
+
+            confirmBtn.addEventListener('click', onConfirm);
+            cancelBtn.addEventListener('click', onCancel);
+          } else {
+            // fallback: immediately simulate
+            try{
+              await fetch('/orders', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({product_id: '{{ order.items[0].product.id }}', amount: amountClp, status: 'succeeded', payment_intent_id: 'pi_mock'})});
+            }catch(e){ console.warn('No se pudo persistir orden mock:', e); }
+            alert('Pago simulado exitoso.');
+          }
+          return;
+        }
+
+        try {
+          const widget = Fintoc.create({
+            publicKey: publicKey,
+            holderType: 'individual',
+            product: 'payments',
+            widgetToken: widgetToken,
+            onSuccess: async function(info) {
+              try{ await fetch('/orders', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({product_id: '{{ order.items[0].product.id }}', amount: amountClp, status: 'succeeded', payment_intent_id: (info && (info.id || info.payment_intent_id)) || null})}); } catch(e){console.warn('No se pudo persistir orden desde onSuccess:', e);}
+              alert('Pago registrado.');
+            },
+            onExit: function(info) {
+              alert('Widget cerrado.');
+            }
+          });
+          widget.open();
+        } catch (err) {
+          console.error('Error inicializando el widget:', err);
+          alert('Error inicializando el widget. Revisa la consola para detalles.');
+        }
+      });
+    </script>
+  {% endif %}
+
 {% endblock %}
