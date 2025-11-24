@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+  <div class="flex gap-6 items-start">
+    <div class="w-80 h-80 bg-gray-100 rounded overflow-hidden flex items-center justify-center">
+      {% if product.image_url %}
+        <img src="{{ product.image_url }}" alt="{{ product.name }}" class="w-full h-full object-cover">
+      {% else %}
+        <span class="text-sm text-light-text-secondary">Sin imagen</span>
+      {% endif %}
+    </div>
+    <div class="flex-1">
+      <h1 class="text-2xl font-bold">{{ product.name }}</h1>
+      <p class="text-sm text-light-text-secondary">Categoría: {{ product.category.name }}</p>
+      <p class="mt-4 text-lg font-semibold">${{ '%.2f' | format(product.price / 100.0) }}</p>
+
+      <div class="mt-4">
+        <p class="text-base text-light-text-secondary">{{ product.description }}</p>
+      </div>
+
+      <div class="mt-6 flex gap-3">
+        <button class="px-4 py-2 bg-primary text-white rounded">Agregar al carrito</button>
+        <a href="{{ url_for('products.index') }}" class="px-4 py-2 border rounded">Volver</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Productos{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+  <h1 class="text-2xl font-bold">Catálogo - Snacks & Bebidas</h1>
+  <p class="text-sm text-light-text-secondary dark:text-dark-text-secondary">Explora nuestro catálogo. Filtra por nombre, categoría u ordena los resultados.</p>
+</div>
+
+<div class="mb-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+  <form method="get" action="{{ url_for('products.index') }}" class="md:col-span-1">
+    <div class="mb-3">
+      <label class="block text-sm font-medium mb-1">Buscar</label>
+      <input type="text" name="q" value="{{ filters.q }}" class="w-full rounded border px-3 py-2" placeholder="Nombre del producto...">
+    </div>
+
+    <div class="mb-3">
+      <label class="block text-sm font-medium mb-1">Categoría</label>
+      <select name="category" class="w-full rounded border px-3 py-2">
+        <option value="">-- Todas --</option>
+        {% for cat in categories %}
+        <option value="{{ cat.id }}" {% if filters.category and filters.category|string == cat.id|string %}selected{% endif %}>{{ cat.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label class="block text-sm font-medium mb-1">Ordenar por</label>
+      <select name="sort" class="w-full rounded border px-3 py-2">
+        <option value="name_asc" {% if filters.sort == 'name_asc' or not filters.sort %}selected{% endif %}>Nombre (A → Z)</option>
+        <option value="name_desc" {% if filters.sort == 'name_desc' %}selected{% endif %}>Nombre (Z → A)</option>
+        <option value="price_asc" {% if filters.sort == 'price_asc' %}selected{% endif %}>Precio (menor → mayor)</option>
+        <option value="price_desc" {% if filters.sort == 'price_desc' %}selected{% endif %}>Precio (mayor → menor)</option>
+      </select>
+    </div>
+
+    <div class="flex gap-2">
+      <button type="submit" class="px-4 py-2 bg-primary text-white rounded">Aplicar</button>
+      <a href="{{ url_for('products.index') }}" class="px-4 py-2 border rounded">Limpiar</a>
+    </div>
+  </form>
+
+  <div class="md:col-span-3">
+    {% if products %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {% for p in products %}
+      <div class="bg-light-card dark:bg-dark-card rounded-lg border p-4">
+        <div class="flex items-start gap-4">
+          <div class="w-20 h-20 bg-gray-100 rounded flex items-center justify-center">
+            {% if p.image_url %}
+              <img src="{{ p.image_url }}" alt="{{ p.name }}" class="object-cover w-full h-full rounded">
+            {% else %}
+              <span class="text-xs text-light-text-secondary">Sin imagen</span>
+            {% endif %}
+          </div>
+          <div class="flex-1">
+            <h3 class="font-semibold text-base"><a href="{{ url_for('products.show', product_id=p.id) }}">{{ p.name }}</a></h3>
+            <p class="text-sm text-light-text-secondary">{{ p.category.name }}</p>
+            <p class="mt-2 font-bold">${{ '%.2f' | format(p.price / 100.0) }}</p>
+            <p class="text-sm mt-2 text-light-text-secondary">{{ p.description }}</p>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+      <p>No se encontraron productos con los filtros indicados.</p>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

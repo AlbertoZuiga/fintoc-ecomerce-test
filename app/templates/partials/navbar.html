@@ -9,13 +9,16 @@
       </svg>
       <span class="hidden xs:inline sm:inline">Ecommerce</span>
     </a>
-    <div class="flex items-center gap-1 sm:gap-2">
+      <div class="flex items-center gap-1 sm:gap-2">
       <!-- Mobile menu button -->
       <button id="menu-toggle" class="md:hidden p-2 rounded-lg hover:bg-light-muted/30 dark:hover:bg-dark-muted/30 focus:outline-none focus:ring-2 focus:ring-primary active:scale-95 transition-all touch-manipulation" aria-label="Abrir menú de navegación" aria-expanded="false">
         <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
       </button>
       <!-- Desktop menu -->
       <ul class="hidden md:flex items-center gap-2 font-medium text-sm">
+        <li>
+          <a href="{{ url_for('products.index') }}" class="px-3 py-2 rounded-lg hover:bg-primary/10 dark:hover:bg-accent/10 transition touch-manipulation" aria-label="Productos">Productos</a>
+        </li>
         {% if current_user.is_authenticated %}
           <li class="relative group">
             <button class="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-2 rounded-lg hover:bg-primary/10 dark:hover:bg-accent/10 transition focus:outline-none touch-manipulation" id="user-menu" aria-haspopup="true">
@@ -40,6 +43,13 @@
             <a href="{{ url_for('auth.login') }}" class="px-3 py-2 rounded-lg hover:bg-primary/10 dark:hover:bg-accent/10 transition text-sm touch-manipulation" aria-label="Iniciar sesión">Iniciar sesión</a>
           </li>
         {% endif %}
+        <li class="relative">
+          <!-- Cart link (placeholder). Integrar carrito real más adelante. -->
+          <a href="{{ url_for('products.index') }}" class="px-3 py-2 rounded-lg hover:bg-primary/10 dark:hover:bg-accent/10 transition touch-manipulation" aria-label="Carrito">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 inline" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4"/></svg>
+            <span id="cart-count" class="ml-1 inline-block text-xs text-white bg-red-500 rounded-full px-1 hidden">0</span>
+          </a>
+        </li>
         <li>
           <!-- Dark mode toggle -->
           <button id="dark-toggle" class="ml-1 sm:ml-2 p-2 rounded-lg hover:bg-light-muted/30 dark:hover:bg-dark-muted/30 focus:outline-none focus:ring-2 focus:ring-primary active:scale-95 transition-all touch-manipulation" aria-label="Alternar modo oscuro">
@@ -52,7 +62,19 @@
   </nav>
   <!-- Mobile menu -->
   <div id="mobile-menu" class="md:hidden hidden px-3 pb-3 border-t border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface">
-    <ul class="flex flex-col gap-2 font-medium pt-3">
+      <ul class="flex flex-col gap-2 font-medium pt-3">
+      <li>
+        <a href="{{ url_for('products.index') }}" class="flex items-center gap-2 px-3 py-3 rounded-lg hover:bg-primary/10 dark:hover:bg-accent/10 transition touch-manipulation active:scale-98">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4"/></svg>
+          Productos
+        </a>
+      </li>
+      <li>
+        <a href="{{ url_for('products.index') }}" class="flex items-center gap-2 px-3 py-3 rounded-lg hover:bg-primary/10 dark:hover:bg-accent/10 transition touch-manipulation active:scale-98">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4"/></svg>
+          Carrito
+        </a>
+      </li>
       {% if current_user.is_authenticated %}
         <li>
           <a href="{{ url_for('auth.logout') }}" class="flex items-center gap-2 px-3 py-3 rounded-lg hover:bg-primary/10 dark:hover:bg-accent/10 transition touch-manipulation active:scale-98">
