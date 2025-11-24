@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Carrito{% endblock %}
+
+{% block content %}
+  <h1 class="text-2xl font-semibold mb-4">Tu carrito</h1>
+
+  {% if order and order.items %}
+    <div class="bg-light-card dark:bg-dark-card p-4 rounded-lg border border-light-border dark:border-dark-border">
+      <table class="w-full text-left">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Precio unidad</th>
+            <th>Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in order.items %}
+            <tr class="border-t border-light-border dark:border-dark-border">
+              <td class="py-2">{{ item.product.name }}</td>
+              <td class="py-2">{{ item.quantity }}</td>
+              <td class="py-2">${{ '%.2f' | format(item.unit_price / 100) }}</td>
+              <td class="py-2">${{ '%.2f' | format((item.unit_price * item.quantity) / 100) }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <div class="mt-4 text-right font-semibold">
+        Total: ${{ '%.2f' | format(order.total_amount / 100) }}
+      </div>
+    </div>
+  {% else %}
+    <p class="text-sm text-light-text-secondary dark:text-dark-text-secondary">Tu carrito está vacío.</p>
+  {% endif %}
+
+{% endblock %}

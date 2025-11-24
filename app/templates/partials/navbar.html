@@ -44,12 +44,17 @@
           </li>
         {% endif %}
         <li class="relative">
-          <!-- Cart link (placeholder). Integrar carrito real más adelante. -->
-          <a href="{{ url_for('products.index') }}" class="px-3 py-2 rounded-lg hover:bg-primary/10 dark:hover:bg-accent/10 transition touch-manipulation" aria-label="Carrito">
+          <!-- Cart link -->
+          <a href="{{ url_for('cart.view_cart') }}" class="px-3 py-2 rounded-lg hover:bg-primary/10 dark:hover:bg-accent/10 transition touch-manipulation" aria-label="Carrito">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 inline" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4"/></svg>
             <span id="cart-count" class="ml-1 inline-block text-xs text-white bg-red-500 rounded-full px-1 hidden">0</span>
           </a>
         </li>
+        {% if current_user.is_authenticated %}
+          <li>
+            <a href="{{ url_for('cart.past_orders') }}" class="px-3 py-2 rounded-lg hover:bg-primary/10 dark:hover:bg-accent/10 transition touch-manipulation">Mis compras</a>
+          </li>
+        {% endif %}
         <li>
           <!-- Dark mode toggle -->
           <button id="dark-toggle" class="ml-1 sm:ml-2 p-2 rounded-lg hover:bg-light-muted/30 dark:hover:bg-dark-muted/30 focus:outline-none focus:ring-2 focus:ring-primary active:scale-95 transition-all touch-manipulation" aria-label="Alternar modo oscuro">
