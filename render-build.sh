@@ -13,5 +13,6 @@ pip install --upgrade pip
 pip install -r requirements.txt
 
 python -m app.db.migrate
+python -m app.db.seed
 
 echo "Build completado"
