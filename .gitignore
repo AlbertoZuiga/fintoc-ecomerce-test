@@ -1,0 +1,82 @@
+# ─────────────────────────────────────────────
+# Python
+# ─────────────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pdb
+*.pkl
+*.egg-info/
+*.egg
+.eggs/
+
+# Byte-compiled / optimized / DLL files
+*.pyc
+*.pyo
+*.pyd
+
+# Caches
+.pytest_cache/
+.cache/
+
+# ─────────────────────────────────────────────
+# Entornos virtuales (muy importante)
+# ─────────────────────────────────────────────
+venv/
+env/
+.venv/
+ENV/
+.virtualenv/
+
+# ─────────────────────────────────────────────
+# Flask / Instance folder (contiene config sensible)
+# ─────────────────────────────────────────────
+instance/
+*.db
+*.sqlite3
+*.sqlite
+
+# ─────────────────────────────────────────────
+# Archivos de configuración local
+# ─────────────────────────────────────────────
+.env
+.env.*
+*.local
+
+# ─────────────────────────────────────────────
+# Logs
+# ─────────────────────────────────────────────
+logs/
+*.log
+
+# ─────────────────────────────────────────────
+# Archivos de compilación / distribución
+# ─────────────────────────────────────────────
+build/
+dist/
+*.egg-info/
+
+# ─────────────────────────────────────────────
+# Render specific (opcional)
+# ─────────────────────────────────────────────
+# Render no necesita ni venv ni pruebas locales
+.render-build/
+.render/
+
+# ─────────────────────────────────────────────
+# IDEs
+# ─────────────────────────────────────────────
+
+# VSCode
+.vscode/
+*.code-workspace
+
+# PyCharm
+.idea/
+
+# ─────────────────────────────────────────────
+# Otros
+# ─────────────────────────────────────────────
+.DS_Store
+Thumbs.db
