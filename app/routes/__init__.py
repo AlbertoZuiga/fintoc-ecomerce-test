@@ -1,0 +1,4 @@
+from app.routes.auth_routes import auth_bp
+from app.routes.main_routes import main_bp
+
+blueprints = [main_bp, auth_bp]

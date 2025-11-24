@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+    <meta name="description" content="Ecommerce - Plataforma de comercio electrónico preparada para desplegar tiendas y catálogos." />
+    <meta name="author" content="Ecommerce Team" />
+    <meta name="theme-color" content="#4f46e5" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <title>{% block title %}Ecommerce{% endblock %} | Plataforma de Comercio</title>
+
+    <!-- TailwindCSS compiled stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    {% block extra_css %}{% endblock %}
+  </head>
+  <body class="bg-light-background text-light-text-primary dark:bg-dark-background dark:text-dark-text-primary min-h-screen flex flex-col transition-colors duration-300">
+    {% include 'partials/navbar.html' %}
+    {% include 'partials/flash.html' %}
+
+    <main class="flex-1 w-full max-w-5xl mx-auto px-3 sm:px-4 py-4 sm:py-6">
+      {% block content %}{% endblock %}
+    </main>
+
+    {% include 'partials/footer.html' %}
+
+    <!-- Custom JS -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block script %}{% endblock %}
+  </body>
+</html>
