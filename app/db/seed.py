@@ -26,16 +26,18 @@ def seed_database():
 
     products_data = [
         # (name, category_name, price_cents, description, sku)
-        ("Papas Fritas Clásicas", "Snacks Salados", 129, "Papas fritas saladas - bolsa 120g", "SNK-001"),
-        ("Maní Tostado", "Snacks Salados", 189, "Maní salado tostado - bolsa 100g", "SNK-002"),
-        ("Galletas Chocolate", "Snacks Dulces", 149, "Galletas con chispas de chocolate - paquete 90g", "SNK-003"),
-        ("Barrita de Cereal", "Snacks Saludables", 99, "Barrita integral con frutos secos - unidad", "SNK-004"),
-        ("Chocolate 70%", "Snacks Dulces", 249, "Chocolate oscuro 70% cacao - tableta 80g", "SNK-005"),
-        ("Agua Mineral 500ml", "Bebidas", 89, "Agua mineral sin gas - 500ml", "DRK-001"),
-        ("Refresco Cola 330ml", "Bebidas", 119, "Refresco cola clásico - lata 330ml", "DRK-002"),
-        ("Jugo Naranja 1L", "Bebidas", 299, "Jugo de naranja natural - 1 litro", "DRK-003"),
-        ("Bebida Energética X", "Bebidas Energéticas", 249, "Energizante con cafeína - lata 250ml", "ENR-001"),
-        ("Agua con Gas 330ml", "Bebidas", 99, "Agua carbonatada - lata 330ml", "DRK-004"),
+        # Prices updated to realistic Chilean CLP values. Stored as integer cents
+        # (i.e. CLP * 100) to match the app convention where templates divide by 100.
+        ("Papas Fritas Clásicas", "Snacks Salados", 1290 * 100, "Papas fritas saladas - bolsa 120g", "SNK-001"),
+        ("Maní Tostado", "Snacks Salados", 1890 * 100, "Maní salado tostado - bolsa 100g", "SNK-002"),
+        ("Galletas Chocolate", "Snacks Dulces", 1490 * 100, "Galletas con chispas de chocolate - paquete 90g", "SNK-003"),
+        ("Barrita de Cereal", "Snacks Saludables", 990 * 100, "Barrita integral con frutos secos - unidad", "SNK-004"),
+        ("Chocolate 70%", "Snacks Dulces", 2490 * 100, "Chocolate oscuro 70% cacao - tableta 80g", "SNK-005"),
+        ("Agua Mineral 500ml", "Bebidas", 890 * 100, "Agua mineral sin gas - 500ml", "DRK-001"),
+        ("Refresco Cola 330ml", "Bebidas", 1190 * 100, "Refresco cola clásico - lata 330ml", "DRK-002"),
+        ("Jugo Naranja 1L", "Bebidas", 2990 * 100, "Jugo de naranja natural - 1 litro", "DRK-003"),
+        ("Bebida Energética X", "Bebidas Energéticas", 2490 * 100, "Energizante con cafeína - lata 250ml", "ENR-001"),
+        ("Agua con Gas 330ml", "Bebidas", 990 * 100, "Agua carbonatada - lata 330ml", "DRK-004"),
     ]
 
     # Create or get categories

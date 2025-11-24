@@ -2,7 +2,7 @@ import os
 import uuid
 import json
 import requests
-from flask import Blueprint, request, jsonify, render_template
+from flask import Blueprint, request, jsonify
 
 from app.models.product import Product
 from app.models.order import Order, OrderStatus
@@ -72,13 +72,23 @@ def create_payment_intent():
     # Expect amount in CLP (integer, not cents). If frontend sends cents, caller should divide by 100.
     amount = data.get('amount')
     if amount is None:
-        # Return payload back to caller to aid debugging
         return jsonify({"error": "amount is required (CLP integer)", "received": data}), 400
 
+    # Accept numbers or numeric-strings (strip thousand separators)
     try:
-        amount = int(amount)
+        if isinstance(amount, str):
+            # remove non-digit characters (commas, spaces, currency symbols)
+            cleaned = ''.join(ch for ch in amount if ch.isdigit())
+            amount_val = int(cleaned) if cleaned else 0
+        else:
+            amount_val = int(amount)
     except Exception:
-        return jsonify({"error": "amount must be integer", "received": data}), 400
+        return jsonify({"error": "amount must be integer or numeric string", "received": data}), 400
+
+    if amount_val <= 0:
+        return jsonify({"error": "amount must be greater than 0", "received": data}), 400
+
+    amount = amount_val
 
     # env flags
     USE_PRESET_RECIPIENT = os.getenv('USE_PRESET_RECIPIENT', 'false').lower() in ('1', 'true', 'yes')

@@ -68,14 +68,16 @@
       const payBtn = document.getElementById('payBtn');
       const publicKey = "{{ fintoc_public_key or '' }}";
       const mockPaymentIntent = {{ 'true' if mock_payment_intent else 'false' }};
-      const amountClp = {{ order_total_clp or 0 }};
+      // Ensure amount is rendered as a JS number (default 0)
+      const amountClp = Number({{ order_total_clp|default(0) }});
 
       async function createPaymentIntent(amount) {
         try {
+          console.log('createPaymentIntent payload amount=', amount);
           const res = await fetch('/create_payment_intent', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ amount: amount })
+            body: JSON.stringify({ amount: amount, product_id: '{{ order.items[0].product.id if order and order.items else "" }}' })
           });
           const data = await res.json();
           if (!res.ok) {
