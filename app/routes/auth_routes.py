@@ -81,7 +81,9 @@ def callback():
 
     user = User.get_or_create_from_oauth(id_info)
     if user:
-        login_user(user)
+        # Use Flask-Login "remember" to keep the session persistent across browser restarts
+        # Duration is controlled by `REMEMBER_COOKIE_DURATION` in app config.
+        login_user(user, remember=True)
 
         next_page = session.pop("next_page", None)
         if not next_page or not is_safe_url(next_page):

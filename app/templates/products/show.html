@@ -22,7 +22,10 @@
       </div>
 
       <div class="mt-6 flex gap-3">
-        <button class="px-4 py-2 bg-primary text-white rounded">Agregar al carrito</button>
+        <form method="post" action="{{ url_for('cart.add_to_cart', product_id=product.id) }}">
+          <input type="hidden" name="quantity" value="1">
+          <button type="submit" class="px-4 py-2 bg-primary text-white rounded">Agregar al carrito</button>
+        </form>
         <a href="{{ url_for('products.index') }}" class="px-4 py-2 border rounded">Volver</a>
       </div>
     </div>

@@ -27,6 +27,10 @@ class Config:  # pylint: disable=too-few-public-methods
     SESSION_PERMANENT = True
     PERMANENT_SESSION_LIFETIME = timedelta(days=30)
 
+    # Remember cookie for Flask-Login (when `login_user(..., remember=True)` is used)
+    REMEMBER_COOKIE_DURATION = timedelta(days=30)
+    REMEMBER_COOKIE_HTTPONLY = True
+
     URL = os.getenv("URL")
 
     DEBUG = os.getenv("DEBUG", "False").lower() in ("true", "1", "t")
