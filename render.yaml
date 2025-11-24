@@ -9,7 +9,7 @@ services:
     name: fintoc_ecomerce-app
     env: python
     buildCommand: "./render-build.sh"
-    startCommand: "gunicorn run:fintoc_ecomerce_app"
+    startCommand: "gunicorn run:app"
     plan: free
     envVars:
         - key: DATABASE_URL
